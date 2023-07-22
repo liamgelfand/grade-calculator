@@ -1,0 +1,109 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+ body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #a5b2c1;
+}
+
+.large-box {
+  padding: 20px;
+  width: 1850px;
+  height: 1000px;
+  background-color: #CED9E5;
+  justify-content: center;
+  border-radius: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  text-align: center;
+  font-size: 50px;
+  font-weight: bolder;
+  margin: 0cm;
+  color: #666161;
+  text-shadow: 1px 1px black;
+}
+
+.add-class-container {
+  justify-content: center;
+
+}
+
+.add-class-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-block; 
+  margin: 10px;
+  font-size: 20px;
+}
+
+.add-class-text {
+  text-align: center;
+  display: inline-block; 
+  margin: 10px;
+  font-size: 30px;
+  color: #666161;
+  text-shadow: 1px 1px black;
+
+}
+
+.newForm {
+  width: 250px;
+  height: 675px;
+  background-color: #a5b2c1;
+  display: inline-block;
+  position: relative;
+  z-index: 2; 
+  margin: 10px;
+  border-radius: 15px;
+}
+
+.class-container {
+  width: 1700px;
+  height: 700px;
+  background-color: #CED9E5; /* Add a background color to .class-container for visibility */
+  position: absolute; /* Set .class-container to absolute position within .large-box */
+  left: 50px;
+}
+
+.newForm .input-div {
+  display: flex; /* Use flexbox to make the inputs appear side by side */
+  width: 200px;
+  margin: 10px;
+}
+
+.newForm .class-name {
+  height: 30px;
+  width: 210px;
+  border-radius: 4px;
+  font-size: 15px;
+  margin: 10px;
+}
+
+.newForm .add-section-button {
+  margin-bottom: 10px;
+}
+
+.newForm .input-div .section-weight,
+.newForm .input-div .section-grades {
+  flex: 1; /* To distribute space evenly between the inputs */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  margin-right: 5px; /* Add some spacing between the inputs */
+}
+
+.newForm .input-div .section-weight {
+  width: 41px;
+}
+
+.newForm .input-div .section-grades {
+  width: 150px;
+}
