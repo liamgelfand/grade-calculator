@@ -40,7 +40,9 @@ export default function App() {
 }
 
 let classCounter = 0; // Global counter to keep track of the number of created classes
+let sectionCounter = 0;
 const maxClasses = 6; // Set the maximum number of classes allowed
+const maxSections = 7;
 
 function createNewClass() {
   if (classCounter >= maxClasses) {
@@ -70,6 +72,11 @@ function createNewClass() {
 }
 
 function createNewSection(event) {
+  if (sectionCounter >= maxClasses) {
+    alert("You can't create more than 6 classes.");
+    return;
+  }
+
   event.preventDefault();
   const button = event.currentTarget;
   const form = button.parentNode;
@@ -95,7 +102,15 @@ function createNewSection(event) {
   inputBox3.classList.add("section-grades");
   inputDiv.appendChild(inputBox3); // Add the Section Grades input to the div
 
+  const button2 = document.createElement("button");
+  button2.textContent = "Calculate";
+  button2.addEventListener("click", handleSubmit);
+  button2.classList.add("submit-button");
+  inputDiv.append(button2)
+
   form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
+
+  sectionCounter++;
 }
   
   return (

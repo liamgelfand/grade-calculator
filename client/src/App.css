@@ -11,7 +11,6 @@
 }
 
 .large-box {
-  padding: 20px;
   width: 1850px;
   height: 1000px;
   background-color: #CED9E5;
@@ -54,23 +53,23 @@
 
 }
 
-.newForm {
-  width: 250px;
-  height: 675px;
-  background-color: #a5b2c1;
-  display: inline-block;
-  position: relative;
-  z-index: 2; 
-  margin: 10px;
-  border-radius: 15px;
-}
-
 .class-container {
   width: 1700px;
   height: 700px;
   background-color: #CED9E5; /* Add a background color to .class-container for visibility */
   position: absolute; /* Set .class-container to absolute position within .large-box */
   left: 50px;
+}
+
+.newForm {
+  width: 250px;
+  height: 700px;
+  background-color: #a5b2c1;
+  display: inline-block;
+  position: relative;
+  z-index: 2; 
+  margin: 10px;
+  border-radius: 15px;
 }
 
 .newForm .input-div {
@@ -85,10 +84,20 @@
   border-radius: 4px;
   font-size: 15px;
   margin: 10px;
+  border: 1px solid #ccc;
 }
 
 .newForm .add-section-button {
   margin-bottom: 10px;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+}
+
+.newForm .section-name {
+  height: 27px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 10px;
 }
 
 .newForm .input-div .section-weight,
@@ -106,4 +115,11 @@
 
 .newForm .input-div .section-grades {
   width: 150px;
+}
+
+.newForm .submit-button {
+  bottom: 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
