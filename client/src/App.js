@@ -17,27 +17,22 @@ export default function App() {
       //assign the data variable to whatever you just recieved from the back end
   }, []);
 
-  const handleSubmit = (event) => {
-    //when the user submits the form
-    const formData = new FormData(event.currentTarget);
-    //extract the data from the form and put it into the object, classObject and print it out
+  function handleSubmit(event, formElement) {
+    const formData = new FormData(formElement);
     event.preventDefault();
     var classObject = {};
-    for(let prop of formData) {classObject[prop[0]] = prop[1]}
-    console.log(classObject)
-    /*
-    this console log will not be visible in the terminal 
-    if you go to your front end, right click on the screen, click on inspect, and click on console, you will be able to see this message printed
-    */
-
-  axios
-  .post('http://localhost:3001/class', classObject)
-  .then(() => console.log('class Created'))
-  .catch(err => {
-    console.error(err);
-  });
-  //send the data over once it is formatted nicely
-}
+    for (let prop of formData) {
+      classObject[prop[0]] = prop[1];
+    }
+  
+    // Send a POST request to the backend API
+    axios
+      .post('http://localhost:3001/class', classObject)
+      .then(() => console.log('Class Created'))
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
 let classCounter = 0; // Global counter to keep track of the number of created classes
 let sectionCounter = 0;
@@ -102,13 +97,7 @@ function createNewSection(event) {
   inputBox3.classList.add("section-grades");
   inputDiv.appendChild(inputBox3); // Add the Section Grades input to the div
 
-  const button2 = document.createElement("button");
-  button2.textContent = "Calculate";
-  button2.addEventListener("click", handleSubmit);
-  button2.classList.add("submit-button");
-  inputDiv.append(button2)
-
-  form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
+    form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
 
   sectionCounter++;
 }
@@ -120,7 +109,11 @@ function createNewSection(event) {
           <button className="add-class-button" onClick={createNewClass}>+</button>
           <p className="add-class-text">Add Class</p>
         </div>
-        <div className="class-container"></div>
+        <div className="class-container">
+          <button className="submit-button" onClick={(event) => handleSubmit(event, event.currentTarget.form)}>
+            Calculate
+          </button>
+        </div>
     </div>
   )
 }

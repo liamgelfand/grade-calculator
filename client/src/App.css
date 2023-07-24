@@ -63,7 +63,7 @@
 
 .newForm {
   width: 250px;
-  height: 700px;
+  height: 600px;
   background-color: #a5b2c1;
   display: inline-block;
   position: relative;
@@ -117,9 +117,13 @@
   width: 150px;
 }
 
-.newForm .submit-button {
-  bottom: 0;
-  width: 100%;
-  border: 1px solid #ccc;
+.submit-button {
+  height: 50px;
+  width: 150px;
   border-radius: 4px;
+  border: 1px solid #ccc;
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  font-size: 32px;
 }
