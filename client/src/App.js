@@ -4,20 +4,13 @@ import axios from 'axios';
 
 
 export default function App() {
-  const [data, setData] = React.useState(null);
-  //keep track of a variable data
+  const [isSubmittable, setSubmittable] = React.useState(false);
 
- useEffect(() => {
-   //fetch the data found from the server at localhost:3001/api
-   //this webpage contains a welcome message we will save
-    fetch("/api")
-      .then((res) => res.json())
-      //turn the result into a json object
-      .then((data) => setData(data.message));
-      //assign the data variable to whatever you just recieved from the back end
-  }, []);
 
   function handleSubmit(event, formElement) {
+    //event is not of type form element
+
+
     const formData = new FormData(formElement);
     event.preventDefault();
     var classObject = {};
@@ -40,10 +33,12 @@ const maxClasses = 6; // Set the maximum number of classes allowed
 const maxSections = 7;
 
 function createNewClass() {
+  setSubmittable(true)
   if (classCounter >= maxClasses) {
     alert("You can't create more than 6 classes.");
     return;
   }
+
   const classContainer = document.querySelector(".class-container");
   const newForm = document.createElement("form"); // Change 'div' to 'form'
   newForm.classList.add('newForm');
@@ -54,7 +49,7 @@ function createNewClass() {
   inputBox.classList.add("class-name")
 
   const button = document.createElement("button");
-  button.textContent = "Add Section";
+  button.textContent = "Add Assignment";
   button.addEventListener('click', createNewSection); // Assign the 'createNewSection' function to the button click
   button.classList.add("add-section-button")
   // Append the elements to the newForm form
@@ -78,7 +73,7 @@ function createNewSection(event) {
 
   const inputBox = document.createElement("input");
   inputBox.type = "text";
-  inputBox.placeholder = "Section Name";
+  inputBox.placeholder = "Assignment Name";
   inputBox.classList.add("section-name");
   form.insertBefore(inputBox, button.nextSibling);
 
@@ -96,24 +91,29 @@ function createNewSection(event) {
   inputBox3.placeholder = "Section Grades";
   inputBox3.classList.add("section-grades");
   inputDiv.appendChild(inputBox3); // Add the Section Grades input to the div
-
-    form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
-
+  form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
   sectionCounter++;
 }
+
+
+
+
+
+
   
   return (
     <div className="large-box">
-        <p className="title"> Grade Calculator</p>
+        <h1 className="title"> Grade Calculator</h1>
         <div className="add-class-container">
-          <button className="add-class-button" onClick={createNewClass}>+</button>
           <p className="add-class-text">Add Class</p>
+          <button className="add-class-button" onClick={createNewClass} label="Add Class">+</button>
         </div>
         <div className="class-container">
+        </div>
+        {isSubmittable &&
           <button className="submit-button" onClick={(event) => handleSubmit(event, event.currentTarget.form)}>
             Calculate
-          </button>
-        </div>
+          </button>}
     </div>
   )
 }
