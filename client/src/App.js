@@ -1,119 +1,99 @@
 import React, {useEffect} from "react";
 import "./App.css";
-import axios from 'axios';
-
 
 export default function App() {
-  const [isSubmittable, setSubmittable] = React.useState(false);
+  const [numAssignments, setNumAssignments]=React.useState(0)
+  const [classes, setClasses]=React.useState([{name:'', assignments:[{type:'', weight:'', grade:''}]}])
 
-
-  function handleSubmit(event, formElement) {
-    //event is not of type form element
-
-
-    const formData = new FormData(formElement);
-    event.preventDefault();
-    var classObject = {};
-    for (let prop of formData) {
-      classObject[prop[0]] = prop[1];
-    }
-  
-    // Send a POST request to the backend API
-    axios
-      .post('http://localhost:3001/class', classObject)
-      .then(() => console.log('Class Created'))
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
-let classCounter = 0; // Global counter to keep track of the number of created classes
-let sectionCounter = 0;
-const maxClasses = 6; // Set the maximum number of classes allowed
-const maxSections = 7;
-
-function createNewClass() {
-  setSubmittable(true)
-  if (classCounter >= maxClasses) {
-    alert("You can't create more than 6 classes.");
-    return;
-  }
-
-  const classContainer = document.querySelector(".class-container");
-  const newForm = document.createElement("form"); // Change 'div' to 'form'
-  newForm.classList.add('newForm');
-
-  const inputBox = document.createElement("input");
-  inputBox.type = "text";
-  inputBox.placeholder = "Class Name";
-  inputBox.classList.add("class-name")
-
-  const button = document.createElement("button");
-  button.textContent = "Add Assignment";
-  button.addEventListener('click', createNewSection); // Assign the 'createNewSection' function to the button click
-  button.classList.add("add-section-button")
-  // Append the elements to the newForm form
-  newForm.appendChild(inputBox);
-  newForm.appendChild(button);
-
-  classContainer.appendChild(newForm);
-
-  classCounter++; // Increment the class counter
-}
-
-function createNewSection(event) {
-  if (sectionCounter >= maxClasses) {
-    alert("You can't create more than 6 classes.");
-    return;
-  }
-
-  event.preventDefault();
-  const button = event.currentTarget;
-  const form = button.parentNode;
-
-  const inputBox = document.createElement("input");
-  inputBox.type = "text";
-  inputBox.placeholder = "Assignment Name";
-  inputBox.classList.add("section-name");
-  form.insertBefore(inputBox, button.nextSibling);
-
-  const inputDiv = document.createElement("div"); // Create a div to hold the side-by-side inputs
-  inputDiv.classList.add("input-div");
-
-  const inputBox2 = document.createElement("input");
-  inputBox2.type = "text";
-  inputBox2.placeholder = "Weight";
-  inputBox2.classList.add("section-weight");
-  inputDiv.appendChild(inputBox2); // Add the Section Weight input to the div
-
-  const inputBox3 = document.createElement("input");
-  inputBox3.type = "text";
-  inputBox3.placeholder = "Section Grades";
-  inputBox3.classList.add("section-grades");
-  inputDiv.appendChild(inputBox3); // Add the Section Grades input to the div
-  form.insertBefore(inputDiv, inputBox.nextSibling); // Insert the div after the Section Name input
-  sectionCounter++;
+const addClass = () => {
+  let newClass = { name: '', assignments:[{type:'', weight:'', grade:''}]}
+  setClasses([...classes, newClass])
 }
 
 
+const handleCourseChange = (courseIndex,assignmentIndex, event) => {
+
+  let classData = [...classes];
+  if (event.target.name==='name'){
+    classData[courseIndex][event.target.name] = event.target.value;
+    setClasses(classData);
+  }
+  else{
+    classData[courseIndex].assignments[assignmentIndex][event.target.name]=event.target.value
+    setClasses(classData);
+  }
+ 
+}
+
+function submit (e) {
+  let classData=[...classes]
+  e.preventDefault();
+  console.log("you are about to send over", classData)
+}
+
+ function addAssignment(courseIndex){
+  let classData = [...classes];
+  let classToModify=classData[courseIndex]
+  let newAssignment={type:'', weight:'', grade:''}  
+  classToModify.assignments.push(newAssignment)
+  setNumAssignments(numAssignments+1)
+ // setClasses([...classes, classToModify])
+}
 
 
-
-
-  
   return (
     <div className="large-box">
         <h1 className="title"> Grade Calculator</h1>
+
         <div className="add-class-container">
           <p className="add-class-text">Add Class</p>
-          <button className="add-class-button" onClick={createNewClass} label="Add Class">+</button>
+          <button className="add-class-button" onClick={addClass} label="Add Class">+</button>
+
         </div>
-        <div className="class-container">
-        </div>
-        {isSubmittable &&
-          <button className="submit-button" onClick={(event) => handleSubmit(event, event.currentTarget.form)}>
-            Calculate
-          </button>}
+        <form onSubmit={(e)=>submit(e)}>
+        {classes.map((input, courseIndex) => {
+          return (
+            <div key={courseIndex} className='course'>
+              <input
+                name='name'
+                placeholder='Class Name'
+                value={input.name}
+                onChange={event=>handleCourseChange(courseIndex, null,event)}
+              /> 
+              <button type="button"onClick={()=>addAssignment(courseIndex)}>Add Assignment</button>        
+{
+//want to continually monitor for updates to re-render the input assignments
+//problem: it does not update as you go
+}
+              {input.assignments.map((assignment, assignmentIndex)=>{
+                return(
+               <div className='assignments'>
+               <input
+                name='type'
+                placeholder='Assignment Type'
+                value={input.assignments.type}
+                onChange={event=>handleCourseChange(courseIndex,assignmentIndex,  event)}
+              /> 
+              <input
+              name='weight'
+              placeholder='Assignment Weight'
+              value={input.assignments.weight}
+              onChange={event=>handleCourseChange(courseIndex, assignmentIndex, event)}
+            /> 
+            <input
+            name='grade'
+            placeholder='Assignment Grade'
+            value={input.assignments.grade}
+            onChange={event=>handleCourseChange(courseIndex,assignmentIndex, event)}
+          /> 
+                </div>        
+                ) 
+              })}  
+                       </div>
+          )
+        })} 
+        </form>
+        <button type="submit" onClick={(e)=>submit(e)}>Submit</button>
     </div>
   )
 }
