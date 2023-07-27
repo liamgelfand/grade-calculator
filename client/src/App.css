@@ -37,6 +37,7 @@
   cursor:pointer;
 }
 
+ 
 .add-class-button:hover{
   background-color: #96b3d5;
   color:white;
@@ -57,60 +58,8 @@
   font-size: 20px;
   margin-top:10px;
 }
+.course{
 
-.newForm {
-  width: 250px;
-  height: 600px;
-  background-color: #a5b2c1;
-  display: inline-block;
-  position: relative;
-  z-index: 2; 
-  margin: 10px;
-  border-radius: 15px;
 }
-
-.newForm .input-div {
-  display: flex; /* Use flexbox to make the inputs appear side by side */
-  width: 200px;
-  margin: 10px;
+.assignments{
 }
-
-.newForm .class-name {
-  height: 30px;
-  width: 210px;
-  border-radius: 4px;
-  font-size: 15px;
-  margin: 10px;
-  border: 1px solid #ccc;
-}
-
-.newForm .add-section-button {
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  margin-left: 10px;
-}
-
-.newForm .section-name {
-  height: 27px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-left: 10px;
-}
-
-.newForm .input-div .section-weight,
-.newForm .input-div .section-grades {
-  flex: 1; /* To distribute space evenly between the inputs */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  margin-right: 5px; /* Add some spacing between the inputs */
-}
-
-.newForm .input-div .section-weight {
-  width: 41px;
-}
-
-.newForm .input-div .section-grades {
-  width: 150px;
-}
-
