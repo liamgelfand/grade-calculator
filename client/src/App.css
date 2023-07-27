@@ -9,8 +9,9 @@
   min-height: 100px;
   overflow: hidden;
   padding: 50px;
-  margin:100px;
+  margin:50px;
   background-color:white;
+  border-radius: 4px;
 }
 .title{
   text-align: center;
@@ -50,6 +51,7 @@
 .class-container {
   background-color: #CED9E5; /* Add a background color to .class-container for visibility */
   padding:10px;
+  border-radius: 4px;
 }
 .submit-button {
   border-radius: 4px;
