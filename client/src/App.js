@@ -45,6 +45,8 @@ function submit (e) {
     <div className="large-box">
         <h1 className="title"> Grade Calculator</h1>
 
+
+
         <div className="add-class-container">
           <p className="add-class-text">Add Class</p>
           <button className="add-class-button" onClick={addClass} label="Add Class">+</button>
