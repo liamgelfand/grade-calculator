@@ -29,7 +29,7 @@ app.post('/class', (req, res) => {
   //   });
 
   // For simplicity, in this example, we'll just log the received data and send a response
-  console.log(classObject);
+  console.log('Recieved data', classObject);
   res.status(200).json({ message: 'Class data received successfully' });
 });
 

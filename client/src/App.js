@@ -3,10 +3,10 @@ import "./App.css";
 
 export default function App() {
   const [numAssignments, setNumAssignments]=React.useState(0)
-  const [classes, setClasses]=React.useState([{name:'', assignments:[{type:'', weight:'', grade:''}]}])
+  const [classes, setClasses]=React.useState([{name:'', assignments:[{section:'', weight:'', grades:''}]}])
 
 const addClass = () => {
-  let newClass = { name: '', assignments:[{type:'', weight:'', grade:''}]}
+  let newClass = { name: '', assignments:[{section:'', weight:'', grades:''}]}
   setClasses([...classes, newClass])
 }
 
@@ -29,6 +29,25 @@ function submit (e) {
   let classData=[...classes]
   e.preventDefault();
   console.log("you are about to send over", classData)
+
+  const requestBody = JSON.stringify(classData);
+  const apiEndpoint = 'http://localhost:3001/class'
+
+  fetch(apiEndpoint, {
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: requestBody,
+  })
+
+  .then((response)=> response.json())
+  .then((data) => {
+    console.log('Data sent successfully:', data);
+  })
+  .catch((error) => {
+    console.error('Error sendinf data to API:', error);
+  })
 }
 
  function addAssignment(courseIndex){
@@ -44,41 +63,38 @@ function submit (e) {
   return (
     <div className="large-box">
         <h1 className="title"> Grade Calculator</h1>
-
-
-
         <div className="add-class-container">
           <p className="add-class-text">Add Class</p>
           <button className="add-class-button" onClick={addClass} label="Add Class">+</button>
-
         </div>
         <form onSubmit={(e)=>submit(e)}>
         {classes.map((input, courseIndex) => {
           return (
             <div key={courseIndex} className='course'>
               <input
+                className='class-name'
                 name='name'
                 placeholder='Class Name'
                 value={input.name}
                 onChange={event=>handleCourseChange(courseIndex, null,event)}
               /> 
-              <button type="button"onClick={()=>addAssignment(courseIndex)}>Add Assignment</button>        
+              <button type="button"onClick={()=>addAssignment(courseIndex)}>Add Section</button>        
 {
 //want to continually monitor for updates to re-render the input assignments
 //problem: it does not update as you go
 }
               {input.assignments.map((assignment, assignmentIndex)=>{
                 return(
-               <div className='assignments'>
+               <div className='section-name'>
                <input
                 name='type'
-                placeholder='Assignment Type'
+                placeholder='Section Name'
                 value={input.assignments.type}
                 onChange={event=>handleCourseChange(courseIndex,assignmentIndex,  event)}
               /> 
               <input
               name='weight'
-              placeholder='Assignment Weight'
+              placeholder='Assignment Weight (%)'
               value={input.assignments.weight}
               onChange={event=>handleCourseChange(courseIndex, assignmentIndex, event)}
             /> 
@@ -95,7 +111,7 @@ function submit (e) {
           )
         })} 
         </form>
-        <button type="submit" onClick={(e)=>submit(e)}>Submit</button>
+        <button className="submit-button" type="button" onClick={(e)=>submit(e)}>Calculate</button>
     </div>
   )
 }
