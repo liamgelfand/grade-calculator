@@ -2,10 +2,12 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // Parse JSON and URL-encoded bodies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // Route handler for handling the POST request at '/class' endpoint
 app.post('/class', (req, res) => {
@@ -29,7 +31,15 @@ app.post('/class', (req, res) => {
   //   });
 
   // For simplicity, in this example, we'll just log the received data and send a response
-  console.log('Recieved data', classObject);
+  console.log('Received data:');
+  classObject.forEach(course => {
+    console.log('Course:', course.name);
+    course.assignments.forEach((assignment, index) => {
+      console.log(`Assignment ${index + 1}:`, assignment);
+    });
+    console.log('---');
+  });
+
   res.status(200).json({ message: 'Class data received successfully' });
 });
 
