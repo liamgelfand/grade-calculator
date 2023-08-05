@@ -87,20 +87,23 @@ return (
               return (
                 <div className='section-name'>
                   <input
+                    className="section-input"
                     name='section'
                     placeholder='Section Name'
                     value={input.assignments.type}
                     onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
                   />
                   <input
+                    className="weight-input"
                     name='weight'
                     placeholder='Assignment Weight (%)'
                     value={input.assignments.weight}
                     onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
                   />
                   <input
+                    className="grades-input"
                     name='grades'
-                    placeholder='Assignment Grade'
+                    placeholder='Section Grades'
                     value={input.assignments.grade}
                     onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
                   />
@@ -111,6 +114,6 @@ return (
         )
       })}
     </form>
-    <button type="submit" onClick={(e)=>submit(e)}>Submit</button>
+    <button  className="submit-button" type="submit" onClick={(e)=>submit(e)}>Submit</button>
   </div>
 )}
