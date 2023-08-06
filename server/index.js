@@ -5,8 +5,9 @@ const cors = require('cors');
 const dotenv = require('dotenv')
 dotenv.config();
 const app = express();
-
 const Course = require('./models/courses.js')
+const PORT = process.env.PORT || 3000;
+const CONNECTION = process.env.CONNECTION
 
 // Parse JSON and URL-encoded bodies
 app.use(bodyParser.json());
@@ -16,14 +17,11 @@ app.use(cors());
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 
-// const course = new Course({
-//   course: 'Math',
-//   section: 'Test',
-//   weight: '25',
-//   grades: '78, 95, 77'
-// });
-
-// course.save();
+function prepareArray(inputString) {
+  const noSpaceString = inputString.replace(/\s+/g, "");
+  const preparedString = noSpaceString.split(',');
+  return preparedString;
+}
 
 app.get('/', (req, res) => {
   res.send(course)
@@ -70,6 +68,7 @@ app.post('/api/course', async (req, res) => {
 });
 
 app.put('/api/course/:id', async(req, res) => {
+  // updates certain course values
   const courseId = req.params.id;
   const result = await Course.replaceOne({_id: courseId}, req.body);
   console.log(result);
@@ -77,21 +76,67 @@ app.put('/api/course/:id', async(req, res) => {
 })
 
 app.delete('/api/course/:id', async(req, res) => {
+  //  deletes course
   const courseId = req.params.id;
   const result = await Course.deleteOne({_id: courseId});
   res.json({deletedCount: result.deletedCount});
 });
 
+app.get('/gradecalc/calculate/:id', async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const course = await Course.findById(courseId);
+    if (!course){
+        res.status(404).json({error: 'Course not found'})
+    } else {
+        res.json({course});
+    }
+  } catch(err) {
+      res.status(500).json({error: 'Something went wrong'})
+  }
+})
+
 // Route handler for handling the POST request at '/class' endpoint
-app.post('/class', (req, res) => {
+app.post('/gradecalc/addclass', async (req, res) => {
   // Logs data sent over from frontend
   const classObject = req.body;
-  console.log(classObject)
-});
+  const courseIds = [];
 
-// Start the server and listen on a port (e.g., 3001)
-const PORT = process.env.PORT || 3000;
-const CONNECTION = process.env.CONNECTION
+  try {
+    for (const course of classObject) {
+      // Create a new course document
+      const newCourse = new Course({
+        course: course.name,
+      });
+
+      // Save the new course document
+      await newCourse.save();
+
+      // iterates through and adds sectionname, weight, and grades
+      course.assignments.forEach(assignment => {
+        newCourse.sections.push({
+          sectionName: assignment.section,
+          weight: assignment.weight,
+          grades: prepareArray(assignment.grades)
+        });
+      })
+      // saves updated course to the collection
+      await newCourse.save();
+      console.log(`Added course ${course.name} with sections`); 
+      //  adds courseId to be used by frontend
+      courseIds.push(`${newCourse._id}`);
+      console.log(courseIds)
+    }
+    // returns courseIds if collection creation was successful
+    res.status(200).json({
+      message: 'Courses and sections added successfully',
+      courseIds: courseIds.join(',')
+  });
+  // handles error if collection creation had an error
+  } catch(err) {
+    res.status(500).json({error: err.message})
+  }
+});
 
 const start = async() => {
   try{
@@ -107,24 +152,4 @@ const start = async() => {
 
 start();
 
-// console.log('Received data:');
-// classObject.forEach(course => {
-//   console.log('Course:', course.name);
-//   course.assignments.forEach((assignment) => {
-//     console.log('Section:', assignment.section);
-//     console.log('Weight:', assignment.weight);
-//     console.log('Grades:', assignment.grades);
-
-//     const classes1 = new Classes({
-//       class_name: str(course.name),
-//       section_name: str(assignment.section),  
-//       weight: str(assignment.weight),
-//       grades: str(assingment.grades)
-//   });
-//   console.log('----------------------------');
-// });
-// });
-// res.status(200).json({ message: 'Class data received successfully' });
-// });
-
-//Post to add class --- Put to modify class  
+//Post to add class --- Put to modify class 

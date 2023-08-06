@@ -25,31 +25,6 @@ const handleCourseChange = (courseIndex,assignmentIndex, event) => {
  
 }
 
-function submit (e) {
-  let classData=[...classes]
-  e.preventDefault();
-  console.log("you are about to send over", classData)
-
-  const requestBody = JSON.stringify(classData);
-  const apiEndpoint = 'http://localhost:3001/class'
-
-  fetch(apiEndpoint, {
-    method:'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: requestBody,
-  })
-
-  .then((response)=> response.json())
-  .then((data) => {
-    console.log('Data sent successfully:', data);
-  })
-  .catch((error) => {
-    console.error('Error sendinf data to API:', error);
-  })
-}
-
  function addAssignment(courseIndex){
   let classData = [...classes];
   let classToModify=classData[courseIndex]
@@ -58,6 +33,47 @@ function submit (e) {
   setNumAssignments(numAssignments+1)
  // setClasses([...classes, classToModify])
 }
+
+function submit(e) {
+  let classData = [...classes];
+  e.preventDefault();
+  console.log("you are about to send over", classData);
+
+  const requestBody = JSON.stringify(classData);
+  const apiEndpoint = 'http://localhost:3001/gradecalc/addclass';
+
+  fetch(apiEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: requestBody,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Data sent successfully:', data);
+
+      const courseIds = data.courseIds;
+
+      courseIds.forEach((courseId) => {
+        fetch(`http://localhost:3001/gradecalc/calculate/${courseId}`)
+          .then((response) => response.json())
+          .then((calculatedData) => {
+
+            // Display the course name and ID in the "Final Grade" div
+            console.log(calculatedData)
+            document.getElementById('finalgrade').textContent = calculatedData;
+          })
+          .catch((error) => {
+            console.error('Error fetching calculated grade:', error);
+          });
+      });
+    })
+    .catch((error) => {
+      console.error('Error sending data to API:', error);
+    });
+}
+
 
 
 return (
@@ -79,6 +95,7 @@ return (
               onChange={(event) => handleCourseChange(courseIndex, null, event)}
             />
             <button type="button" onClick={() => addAssignment(courseIndex)}>Add Section</button>
+            <div id="finalgrade" className="final-grade">Final Grade</div>
             {
               // want to continually monitor for updates to re-render the input assignments
               // problem: it does not update as you go

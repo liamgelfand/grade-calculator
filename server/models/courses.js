@@ -5,18 +5,13 @@ courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    section: {
-        type: String,
-        required: true
-    },
-    weight: {
-        type: String,
-        required: true
-    },
-    grades: {
-        type: String,
-        required: true
-    }
+    sections: [
+        {
+            sectionName: String,
+            weight: Number,
+            grades: Array
+        }
+    ]
 });
 
 module.exports = mongoose.model('Course', courseSchema);
