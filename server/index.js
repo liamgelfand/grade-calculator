@@ -83,18 +83,26 @@ app.delete('/api/course/:id', async(req, res) => {
 });
 
 app.get('/gradecalc/calculate/:id', async (req, res) => {
+  // gets specific course based on UUID
   try {
     const courseId = req.params.id;
     const course = await Course.findById(courseId);
+    const courseName = course.course;
+
+    course.sections.forEach((section) => {
+      const gradesArray = section.grades;
+      console.log(gradesArray);
+    });
+
     if (!course){
         res.status(404).json({error: 'Course not found'})
     } else {
-        res.json({course});
+        res.json(`${gradesArray}`);
     }
   } catch(err) {
       res.status(500).json({error: 'Something went wrong'})
   }
-})
+});
 
 // Route handler for handling the POST request at '/class' endpoint
 app.post('/gradecalc/addclass', async (req, res) => {

@@ -49,6 +49,10 @@
   text-shadow: 1px 1px black;
   font-size: 25px;
 }
+
+.course-div {
+  display: flex;
+}
 .class-container {
   background-color: #CED9E5; /* Add a background color to .class-container for visibility */
   padding: 10px;

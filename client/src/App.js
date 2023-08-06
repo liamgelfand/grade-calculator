@@ -35,13 +35,16 @@ const handleCourseChange = (courseIndex,assignmentIndex, event) => {
 }
 
 function submit(e) {
+  // creates shallow copy of classes data
   let classData = [...classes];
   e.preventDefault();
   console.log("you are about to send over", classData);
 
+  // prepares data to send to api
   const requestBody = JSON.stringify(classData);
   const apiEndpoint = 'http://localhost:3001/gradecalc/addclass';
 
+  // calls api
   fetch(apiEndpoint, {
     method: 'POST',
     headers: {
@@ -51,18 +54,22 @@ function submit(e) {
   })
     .then((response) => response.json())
     .then((data) => {
+      // logs data and message in console
       console.log('Data sent successfully:', data);
 
-      const courseIds = data.courseIds;
+      // converts courseIds into an array + logs them
+      const courseIds = Array.isArray(data.courseIds) ? data.courseIds : [];
+      console.log(courseIds)
 
+      // iterates through each courseId and calls a get method 
+      // to get the calculated grade
       courseIds.forEach((courseId) => {
         fetch(`http://localhost:3001/gradecalc/calculate/${courseId}`)
           .then((response) => response.json())
           .then((calculatedData) => {
 
-            // Display the course name and ID in the "Final Grade" div
+            // Display the course name and ID
             console.log(calculatedData)
-            document.getElementById('finalgrade').textContent = calculatedData;
           })
           .catch((error) => {
             console.error('Error fetching calculated grade:', error);
@@ -96,6 +103,7 @@ return (
             />
             <button type="button" onClick={() => addAssignment(courseIndex)}>Add Section</button>
             <div id="finalgrade" className="final-grade">Final Grade</div>
+            <input placeholder="User name"></input>
             {
               // want to continually monitor for updates to re-render the input assignments
               // problem: it does not update as you go
@@ -113,7 +121,7 @@ return (
                   <input
                     className="weight-input"
                     name='weight'
-                    placeholder='Assignment Weight (%)'
+                    placeholder='Section Weight (%)'
                     value={input.assignments.weight}
                     onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
                   />
