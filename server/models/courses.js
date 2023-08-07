@@ -8,13 +8,13 @@ courseSchema = new mongoose.Schema({
             sections: [
                 {
                     sectionName: String,
-                    weight: Number,
-                    grades: Array,
-                    finalGrade: Number
+                    weight: String,
+                    grades: String,
+                    finalGrade: String
                 }
             ]
         }
     ]
-})
+});
 
 module.exports = mongoose.model('Course', courseSchema);

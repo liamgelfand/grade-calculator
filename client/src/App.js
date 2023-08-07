@@ -12,6 +12,7 @@ const addClass = () => {
 }
 
 
+
 const handleCourseChange = (courseIndex,assignmentIndex, event) => {
   let classData = [...classes];
   if (event.target.name==='name'){
@@ -19,32 +20,31 @@ const handleCourseChange = (courseIndex,assignmentIndex, event) => {
     setClasses(classData);
   }
   else{
-    classData[courseIndex].sections[sectionIndex][event.target.name]=event.target.value
+    classData[courseIndex].assignments[assignmentIndex][event.target.name]=event.target.value
     setClasses(classData);
   }
  
 }
 
- function addSection(courseIndex){
+ function addAssignment(courseIndex){
   let classData = [...classes];
-  let classToModify=classData[courseIndex];
-  let newSection={type:'', weight:'', grade:''}  
-  classToModify.sections.push(newSection)
-  setNumSections(numSections+1)
+  let classToModify=classData[courseIndex]
+  let newAssignment={type:'', weight:'', grade:''}  
+  classToModify.assignments.push(newAssignment)
+  setNumAssignments(numAssignments+1)
  // setClasses([...classes, classToModify])
 }
 
 function submit(e) {
-  // creates shallow copy of classes data
   let classData = [...classes];
   e.preventDefault();
-  console.log("you are about to send over", classData);
+  let objectToSend={student:studentName,
+  courses:classData}
+  console.log("you are about to send over", objectToSend);
 
-  // prepares data to send to api
-  const requestBody = JSON.stringify(classData);
-  const apiEndpoint = 'http://localhost:3001/gradecalc/addclass';
+  const requestBody = JSON.stringify(objectToSend);
+  const apiEndpoint = 'http://localhost:3001/api/addCourse';
 
-  // calls api
   fetch(apiEndpoint, {
     method: 'POST',
     headers: {
@@ -54,24 +54,36 @@ function submit(e) {
   })
     .then((response) => response.json())
     .then((data) => {
-      // logs data and message in console
       console.log('Data sent successfully:', data);
-    })
-    .catch((error) => {
-      console.error('Error sending data to API:', error);
-    });
+
+          })
+          .catch((error) => {
+            console.error('Error fetching calculated grade:', error);
+          });
 }
 
+const changeText = (e) => {
+  //setTextValue(e.target.value);
+  setStudentName(e.target.value);
+  }
 
 
 return (
   <div className="large-box">
     <h1 className="title">Grade Calculator</h1>
+    <form onSubmit={(e) => submit(e)}>
+    <input
+              className='class-name'
+              name='student-name'
+              placeholder='Student Name'
+              value={studentName}
+              onChange={changeText}
+            />
     <div className="add-class-container">
       <p className="add-class-text">Add Class</p>
       <button className="add-class-button" onClick={addClass} label="Add Class">+</button>
     </div>
-    <form onSubmit={(e) => submit(e)}>
+  
       {classes.map((input, courseIndex) => {
         return (
           <div key={courseIndex} className='course'>
@@ -82,37 +94,37 @@ return (
               value={input.name}
               onChange={(event) => handleCourseChange(courseIndex, null, event)}
             />
-            <button type="button" onClick={() => addSection(courseIndex)}>Add Section</button>
+            <button type="button" onClick={() => addAssignment(courseIndex)}>Add Section</button>
             <div id="finalgrade" className="final-grade">Final Grade</div>
             {
               // want to continually monitor for updates to re-render the input assignments
               // problem: it does not update as you go
             }
-            {input.sections.map((section, sectionIndex) => {
-            return (
-              <div className='section-name'>
-                <input
-                  className="section-input"
-                  name='section'
-                  placeholder='Section Name'
-                  value={section.section}
-                  onChange={(event) => handleCourseChange(courseIndex, sectionIndex, event)}
-                />
-                <input
-                  className="weight-input"
-                  name='weight'
-                  placeholder='Section Weight (%)'
-                  value={section.weight}
-                  onChange={(event) => handleCourseChange(courseIndex, sectionIndex, event)}
-                />
-                <input
-                  className="grades-input"
-                  name='grades'
-                  placeholder='Section Grades'
-                  value={section.grades}
-                  onChange={(event) => handleCourseChange(courseIndex, sectionIndex, event)}
-                />
-              </div>
+            {input.assignments.map((assignment, assignmentIndex) => {
+              return (
+                <div className='section-name'>
+                  <input
+                    className="section-input"
+                    name='section'
+                    placeholder='Section Name'
+                    value={input.assignments.type}
+                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                  />
+                  <input
+                    className="weight-input"
+                    name='weight'
+                    placeholder='Assignment Weight (%)'
+                    value={input.assignments.weight}
+                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                  />
+                  <input
+                    className="grades-input"
+                    name='grades'
+                    placeholder='Section Grades'
+                    value={input.assignments.grade}
+                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                  />
+                </div>
               )
             })}
           </div>
