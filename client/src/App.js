@@ -81,12 +81,10 @@ const changeText = (e) => {
   setStudentName(e.target.value);
   }
 
-
   return (
     <div className="large-box">
       <h1 className="title">Grade Calculator</h1>
       <form onSubmit={(e) => submit(e)}>
-        <span>
           <input
             className='user-name'
             name='student-name'
@@ -94,13 +92,11 @@ const changeText = (e) => {
             value={studentName}
             onChange={changeText}
           />
-        </span>
         <div className="add-class-container">
-          <button className="add-class-button" onClick={addClass}>
-            <span className="plus-icon"></span> Add Class
+          <button className="add-class-button" type="button" onClick={addClass}>
+            Add Class
           </button>
-        </div>
-  
+        </div>yea
         {classes.map((input, courseIndex) => (
           <div key={courseIndex} className='course'>
             <input
