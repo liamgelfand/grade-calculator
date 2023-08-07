@@ -18,6 +18,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 
 function prepareArray(inputString) {
+  // turns string into readable array
   const noSpaceString = inputString.replace(/\s+/g, "");
   const preparedString = noSpaceString.split(',');
   return preparedString;
@@ -108,13 +109,28 @@ app.get('/gradecalc/calculate/:id', async (req, res) => {
 app.post('/gradecalc/addclass', async (req, res) => {
   // Logs data sent over from frontend
   const classObject = req.body;
-  const courseIds = [];
 
   try {
-    for (const course of classObject) {
+    const courseIds = [];
+
+    for (const course of classObject.courses) {
+      // Create sections array based on course.sections
+      const sections = course.sections.map(section => ({
+        sectionName: section.section,
+        weight: section.weight,
+        grades: prepareArray(section.grades),
+        finalGrade: 0  // You can set the initial finalGrade here if needed
+      }));
+
       // Create a new course document
       const newCourse = new Course({
-        course: course.name,
+        user: classObject.student,
+        courses: [
+          {
+            course: course.name,
+            sections: sections
+          }
+        ]
       });
 
       // Save the new course document
