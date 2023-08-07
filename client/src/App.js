@@ -3,8 +3,9 @@ import "./App.css";
 
 export default function App() {
   const [numAssignments, setNumAssignments]=React.useState(0)
-  const [classes, setClasses]=React.useState([{name:'', assignments:[{section:'', weight:'', grades:''}]}])
+  const [classes, setClasses]=React.useState([{name:'', assignments:[{section:'', weight:'', grades:''}], totalGrade:0}])
   const [studentName, setStudentName]=React.useState("")
+
 
 const addClass = () => {
   let newClass = { name: '', assignments:[{section:'', weight:'', grades:''}]}
@@ -43,7 +44,9 @@ function submit(e) {
   console.log("you are about to send over", objectToSend);
 
   const requestBody = JSON.stringify(objectToSend);
-  const apiEndpoint = 'http://localhost:3001/api/addCourse';
+  const apiEndpoint = 'http://localhost:3001/calculator/add';
+
+  let updatedClasses;
 
   fetch(apiEndpoint, {
     method: 'POST',
@@ -56,10 +59,21 @@ function submit(e) {
     .then((data) => {
       console.log('Data sent successfully:', data);
 
-          })
-          .catch((error) => {
-            console.error('Error fetching calculated grade:', error);
-          });
+      data.course.courses.forEach((course, courseIndex) => {
+        let calculatedTotalGrade = 0;
+        course.sections.forEach((section) => {
+          calculatedTotalGrade += parseFloat(section.finalGrade);
+        });
+        const updatedClasses = [...classes];
+        updatedClasses[courseIndex].totalGrade = calculatedTotalGrade.toFixed(3);
+        setClasses(updatedClasses);
+      });
+      updatedClasses.forEach((course, courseIndex) => {
+        console.log(`Total Grade for Course ${course.name}: ${course.totalGrade}`)
+      })
+      }).catch((error) => {
+          console.error('Error fetching calculated grade:', error);
+      });
 }
 
 const changeText = (e) => {
@@ -68,24 +82,26 @@ const changeText = (e) => {
   }
 
 
-return (
-  <div className="large-box">
-    <h1 className="title">Grade Calculator</h1>
-    <form onSubmit={(e) => submit(e)}>
-    <input
-              className='class-name'
-              name='student-name'
-              placeholder='Student Name'
-              value={studentName}
-              onChange={changeText}
-            />
-    <div className="add-class-container">
-      <p className="add-class-text">Add Class</p>
-      <button className="add-class-button" onClick={addClass} label="Add Class">+</button>
-    </div>
+  return (
+    <div className="large-box">
+      <h1 className="title">Grade Calculator</h1>
+      <form onSubmit={(e) => submit(e)}>
+        <span>
+          <input
+            className='user-name'
+            name='student-name'
+            placeholder='Student Name'
+            value={studentName}
+            onChange={changeText}
+          />
+        </span>
+        <div className="add-class-container">
+          <button className="add-class-button" onClick={addClass}>
+            <span className="plus-icon"></span> Add Class
+          </button>
+        </div>
   
-      {classes.map((input, courseIndex) => {
-        return (
+        {classes.map((input, courseIndex) => (
           <div key={courseIndex} className='course'>
             <input
               className='class-name'
@@ -94,43 +110,54 @@ return (
               value={input.name}
               onChange={(event) => handleCourseChange(courseIndex, null, event)}
             />
-            <button type="button" onClick={() => addAssignment(courseIndex)}>Add Section</button>
-            <div id="finalgrade" className="final-grade">Final Grade</div>
-            {
-              // want to continually monitor for updates to re-render the input assignments
-              // problem: it does not update as you go
-            }
-            {input.assignments.map((assignment, assignmentIndex) => {
-              return (
-                <div className='section-name'>
+            {input.assignments.map((assignment, assignmentIndex) => (
+              <div className='section' key={assignmentIndex}>
+                <span>
                   <input
                     className="section-input"
                     name='section'
                     placeholder='Section Name'
-                    value={input.assignments.type}
-                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                    value={assignment.section}
+                    onChange={(event) =>
+                      handleCourseChange(courseIndex, assignmentIndex, event)
+                    }
                   />
+                </span>
+                <span>
                   <input
                     className="weight-input"
                     name='weight'
                     placeholder='Assignment Weight (%)'
-                    value={input.assignments.weight}
-                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                    value={assignment.weight}
+                    onChange={(event) =>
+                      handleCourseChange(courseIndex, assignmentIndex, event)
+                    }
                   />
+                </span>
+                <span>
                   <input
                     className="grades-input"
                     name='grades'
                     placeholder='Section Grades'
-                    value={input.assignments.grade}
-                    onChange={(event) => handleCourseChange(courseIndex, assignmentIndex, event)}
+                    value={assignment.grades}
+                    onChange={(event) =>
+                      handleCourseChange(courseIndex, assignmentIndex, event)
+                    }
                   />
-                </div>
-              )
-            })}
+                </span>
+              </div>
+            ))}
+            <button className="add-section-button" type="button" onClick={() => addAssignment(courseIndex)}>
+              Add Section
+            </button>
+            <div className="final-grade">Final Grade: {input.totalGrade}</div>
           </div>
-        )
-      })}
-    </form>
-    <button  className="submit-button" type="submit" onClick={(e)=>submit(e)}>Submit</button>
-  </div>
-)}
+        ))}
+        <button className="submit-button" type="submit" onClick={(e) => submit(e)}>
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+}
+   

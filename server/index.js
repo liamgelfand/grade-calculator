@@ -19,7 +19,7 @@ mongoose.set('strictQuery', false);
 
 function prepareArray(inputString) {
   const noSpaceString = inputString.replace(/\s+/g, "");
-  const preparedString = noSpaceString.split(',');
+  const preparedString = noSpaceString.split(',').map(Number);
   return preparedString;
 }
 
@@ -28,11 +28,12 @@ function calculateGrade(weight, grades) {
   const preparedWeight = parseFloat(weight);
   const sum = preparedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
   const total = (sum / preparedArray.length) * (preparedWeight / 100);
-  return total;
+  const roundedTotal = total.toFixed(3);
+  return roundedTotal;
 }
 
 
-app.post('/api/addCourse', async (req, res) => {
+app.post('/calculator/add', async (req, res) => {
   console.log('Received POST request:', req.body);
 
   const { student, courses } = req.body;
@@ -55,29 +56,12 @@ app.post('/api/addCourse', async (req, res) => {
   try {
     const savedCourse = await course.save();
     console.log('Saved course object:', savedCourse);
-    res.status(201).json({ course: savedCourse });
+    res.status(201).json({course: savedCourse});
   } catch (err) {
     console.error('Error saving course:', err);
     res.status(400).json({ error: err.message });
   }
 });
-
-app.get('/gradecalc/calculate/:id', async (req, res) => {
-  try {
-    const courseId = req.params.id;
-    const course = await Course.findById(courseId);
-    if (!course){
-        res.status(404).json({error: 'Course not found'})
-    } else {
-        res.json({course});
-    }
-  } catch(err) {
-      res.status(500).json({error: 'Something went wrong'})
-  }
-})
-
-// Route handler for handling the POST request at '/class' endpoint
-
 
 const start = async() => {
   try{
@@ -94,6 +78,22 @@ const start = async() => {
 start();
 
 //Post to add class --- Put to modify class
+
+// app.get('/gradecalc/calculate/:id', async (req, res) => {
+//   try {
+//     const courseId = req.params.id;
+//     const course = await Course.findById(courseId);
+//     if (!course){
+//         res.status(404).json({error: 'Course not found'})
+//     } else {
+//         res.json({course});
+//     }
+//   } catch(err) {
+//       res.status(500).json({error: 'Something went wrong'})
+//   }
+// })
+
+// -----------------------------------------------------------
 
 // app.delete('/api/course/:id', async(req, res) => {
 //   //  deletes course
