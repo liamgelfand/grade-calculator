@@ -4,7 +4,7 @@
 
 /* Global Styles */
 body {
-  background-color: #f7f7f7;
+  background-color: #F4EEE1;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@ body {
 .large-box {
   display: flex;
   flex-direction: column;
-  background-color: #eaeaea;
+  background-color: #E4DAC2;
   padding: 20px;
   border-radius: 10px;
   margin: 50px auto;
@@ -24,15 +24,7 @@ body {
 .title {
   text-align: center;
   margin-bottom: 20px;
-}
-
-/* Form Styles */
-.form-container {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin: 20px;
+  color: #9C8F7D;
 }
 
 .user-name {
@@ -56,10 +48,17 @@ body {
   background-color: #0056b3;
 }
 
+.course-container {
+  background-color: #D8C8A7;
+  border-radius: 4px;
+}
+
 .class-name {
   font-size: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
 /* Course Styles */
@@ -82,6 +81,7 @@ body {
 .grades-input {
   flex: 1;
   margin-right: 10px;
+  margin-left: 10px;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -94,7 +94,7 @@ body {
   border-radius: 5px;
   padding: 8px 12px;
   cursor: pointer;
-  margin: 10px 10px 10px 0px;
+  margin: 10px;
 }
 
 .add-section-button:hover {
@@ -102,7 +102,8 @@ body {
 }
 /* Final Grade Styles */
 .final-grade {
-  margin-top: 10px;
+  margin-left: 10px;;
+  padding-bottom: 10px;
   font-weight: bold;
 }
 
@@ -115,6 +116,7 @@ body {
   padding: 10px 20px;
   cursor: pointer;
   font-weight: bold;
+  margin-top: 10px;
 }
 
 .submit-button:hover {
