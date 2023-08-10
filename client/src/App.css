@@ -4,7 +4,7 @@
 
 /* Global Styles */
 body {
-  background-color: #F4EEE1;
+  background-color: #283655;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@ body {
 .large-box {
   display: flex;
   flex-direction: column;
-  background-color: #E4DAC2;
+  background-color: #4D648D;
   padding: 20px;
   border-radius: 10px;
   margin: 50px auto;
@@ -24,11 +24,19 @@ body {
 .title {
   text-align: center;
   margin-bottom: 20px;
-  color: #9C8F7D;
+  color: #f7f7f7;
+  font-size: 40px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: left; /* Center horizontally */
 }
 
 .user-name {
   font-size: 25px;
+  max-width: 20vh;
   border-radius: 4px;
   border-color: #f7f7f7;
 }
@@ -49,7 +57,7 @@ body {
 }
 
 .course-container {
-  background-color: #D8C8A7;
+  background-color: #A3C5E2;
   border-radius: 4px;
 }
 
@@ -105,6 +113,7 @@ body {
   margin-left: 10px;;
   padding-bottom: 10px;
   font-weight: bold;
+  color: #f7f7f7;
 }
 
 /* Submit Button Styles */
